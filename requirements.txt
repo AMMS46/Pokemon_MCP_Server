@@ -1,0 +1,6 @@
+fastapi
+streamlit
+uvicorn
+langchain
+langchain-google-genai
+langchain-community
