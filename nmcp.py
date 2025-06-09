@@ -10,22 +10,22 @@ from langchain_core.messages import HumanMessage
 import json
 import re
 
-# --- Load environment variables ---
+#  Load environment variables 
 load_dotenv()
 os.environ['GEMINI_API_KEY'] = os.getenv("GEMINI_API_KEY")
 
-# --- Server-Side Logging Setup ---
+#  Server-Side Logging Setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# --- FastAPI App Initialization ---
+# FastAPI App Initialization
 app = FastAPI(
     title="Pokémon MCP - Core Data Services",
     description="Provides basic Pokémon information retrieval, comparison, and team generation via PokeAPI and Gemini.",
     version="1.1.0"
 )
 
-# --- CORS Configuration ---
+# CORS Configuration
 origins = [
     "http://localhost:8501",  # Streamlit frontend
 ]
@@ -38,10 +38,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- PokeAPI Base URL ---
+# PokeAPI URL
 BASE_URL = "https://pokeapi.co/api/v2/"
 
-# --- Helper: Fetch Pokémon Data ---
+# Fetch Pokémon Data
 def _fetch_pokemon_data_from_pokeapi(name: str):
     if not name:
         logger.warning("Attempted to fetch Pokémon with empty name.")
@@ -96,7 +96,7 @@ def _fetch_pokemon_data_from_pokeapi(name: str):
         logger.exception(f"An unexpected error occurred while processing data for {name}.")
         raise HTTPException(status_code=500, detail=f"An internal server error occurred: {e}")
 
-# --- Endpoints ---
+# Endpoints 
 
 @app.get("/pokemon/{name}", summary="Retrieve detailed information for a single Pokémon")
 async def get_pokemon_details(name: str):
