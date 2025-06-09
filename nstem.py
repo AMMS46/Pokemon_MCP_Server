@@ -956,41 +956,10 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-
-def hide_all_streamlit_ui():
-    """Hide all Streamlit branding and UI elements"""
-    hide_streamlit_style = """
-    <style>
-    /* Hide main menu */
-    #MainMenu {visibility: hidden;}
-    
-    /* Hide footer */
-    footer {visibility: hidden;}
-    
-    /* Hide header */
-    header {visibility: hidden;}
-    
-    /* Hide GitHub fork button and deploy button */
-    .stActionButton, .stDeployButton, button[kind="header"] {
-        display: none !important;
-    }
-    
-    /* Hide toolbar */
-    .stToolbar, [data-testid="stToolbar"] {
-        display: none !important;
-    }
-    
-    /* Reduce top padding since header is hidden */
-    .block-container {
-        padding-top: 1rem;
-        padding-bottom: 0rem;
-    }
-    
-    /* Hide running indicator */
-    .stAlert > div  {
-        display: none;
-    }
-    </style>
-    """
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+hide_github_icon = """
+#GithubIcon {
+  visibility: hidden;
+}
+"""
+st.markdown(hide_github_icon, unsafe_allow_html=True)
 
