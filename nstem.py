@@ -11,7 +11,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- Custom CSS for Enhanced UI ---
+# Custom CSS 
 st.markdown("""
 <style>
     /* Import modern fonts */
@@ -248,7 +248,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-MCP_SERVER_URL = "https://pokemon-mcp-server.onrender.com/"
+MCP_SERVER_URL = "http://localhost:8000"
 
 
 def create_loading_animation():
@@ -280,7 +280,7 @@ def display_pokemon_card(pokemon_data: Dict[str, Any], title: str = None):
 
         with col1:
             if pokemon_data.get('sprite'):
-                st.image(pokemon_data['sprite'], width=120)
+                st.image(pokemon_data['sprite'], width=220)
 
         with col2:
             # Types
@@ -543,28 +543,16 @@ with tab3:
 
                 if target_pokemon:
                     st.markdown("### 🎯 **Target Analysis**")
-                    col1, col2 = st.columns([1, 2])
-                    with col1:
-                        st.markdown(f"""
-                        <div class="pokemon-card">
-                            <div class="pokemon-name">{target_pokemon.get('name', 'Unknown')}</div>
-                            <div>Types: {', '.join([f'<span class="type-badge">{t}</span>' for t in target_pokemon.get('types', [])])}</div>
-                        </div>
-                        """, unsafe_allow_html=True)
+                    display_pokemon_card(target_pokemon)
 
-                    with col2:
-                        st.markdown("""
-                        <div style="background: rgba(255,152,0,0.1); padding: 1rem; border-radius: 10px; border-left: 3px solid #FF9800;">
-                            <strong>💡 Strategy Tip:</strong><br>
-                            Look for Pokémon with type advantages and moves that exploit the target's weaknesses!
-                        </div>
-                        """, unsafe_allow_html=True)
 
                 if counters:
                     st.markdown("### ⚡ **Recommended Counters**")
                     for i, counter in enumerate(counters, 1):
-                        st.markdown(f"""
-                        <div class="team-member">
+                        # MODIFIED: Added Pokémon sprite to the counter card
+                        sprite_html = f"<img src='{counter['sprite']}' width='90' style='align-self: center; margin-right: 1rem;'>" if counter.get('sprite') else ""
+                        details_html = f"""
+                        <div style='flex-grow: 1;'>
                             <h4 style="color: #4ECDC4; margin-bottom: 0.5rem;">
                                 #{i} {counter.get('name', 'Unknown')}
                                 <span class="type-badge">{counter.get('type', 'Unknown')}</span>
@@ -572,6 +560,12 @@ with tab3:
                             <div style="color: rgba(255,255,255,0.9); line-height: 1.5;">
                                 <strong>🎯 Why it works:</strong> {counter.get('reason', 'Strategic advantage')}
                             </div>
+                        </div>
+                        """
+                        st.markdown(f"""
+                        <div class="team-member">
+                            {sprite_html}
+                            {details_html}
                         </div>
                         """, unsafe_allow_html=True)
                 else:
@@ -660,7 +654,7 @@ st.markdown("---")
 st.markdown("""
 <div style="text-align: center; padding: 2rem; background: rgba(255,255,255,0.05); border-radius: 20px; margin: 2rem 0;">
     <p style="color: rgba(255,255,255,0.7); font-family: 'Poppins', sans-serif; font-size: 0.9rem;">
-        Developed by Abuzar Mohammed Makeen. Data from PokéAPI with AI insights.
+        Developed with ❤️ for Pokémon enthusiasts. Data from PokéAPI. AI insights by Gemini.
     </p>
 </div>
 """, unsafe_allow_html=True)
