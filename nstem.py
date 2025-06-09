@@ -660,7 +660,7 @@ st.markdown("---")
 st.markdown("""
 <div style="text-align: center; padding: 2rem; background: rgba(255,255,255,0.05); border-radius: 20px; margin: 2rem 0;">
     <p style="color: rgba(255,255,255,0.7); font-family: 'Poppins', sans-serif; font-size: 0.9rem;">
-        Developed with ❤️ for Pokémon enthusiasts. Data from PokéAPI. AI insights by Gemini.
+        Developed by Abuzar Mohammed Makeen. Data from PokéAPI with AI insights.
     </p>
 </div>
 """, unsafe_allow_html=True)
