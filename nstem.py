@@ -472,7 +472,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-MCP_SERVER_URL = "http://localhost:8000"
+MCP_SERVER_URL = "https://pokemon-mcp-server.onrender.com"
 
 
 def create_loading_animation():
