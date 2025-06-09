@@ -14,18 +14,18 @@ import json
 import re
 from datetime import datetime
 
-# --- Load environment variables ---
+#  Load environment variables 
 load_dotenv()
 os.environ['GEMINI_API_KEY'] = os.getenv("GEMINI_API_KEY")
 
-# --- Server-Side Logging Setup ---
+#  Server-Side Logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 
-# --- Pydantic Models for Structured AI Agent Communication ---
+#  Pydantic Models for Structured AI Agent Communication
 class PokemonData(BaseModel):
-    """Structured Pokemon data for AI agents"""
+
     name: str
     id: int
     height: float
@@ -39,7 +39,7 @@ class PokemonData(BaseModel):
 
 
 class TeamMember(BaseModel):
-    """Enhanced team member with strategic data"""
+    
     name: str
     primary_type: str
     secondary_type: Optional[str] = None
@@ -51,14 +51,14 @@ class TeamMember(BaseModel):
 
 
 class TeamRequest(BaseModel):
-    """Request model for team generation"""
+    
     description: str = Field(..., description="Natural language description of desired team")
     include_stats: bool = Field(default=True, description="Include Pokemon stats from PokeAPI")
     max_retries: int = Field(default=3, description="Max retries for invalid Pokemon names")
 
 
 class CounterPokemon(BaseModel):
-    """Counter Pokemon suggestion"""
+    
     name: str
     type: str
     reason: str
@@ -66,7 +66,7 @@ class CounterPokemon(BaseModel):
 
 
 class BattleResult(BaseModel):
-    """Head to head battle result"""
+
     winner: str
     confidence: str
     reasoning: str
@@ -74,7 +74,7 @@ class BattleResult(BaseModel):
 
 
 class MCPResponse(BaseModel):
-    """Standard MCP response wrapper"""
+    
     success: bool
     data: Any
     metadata: Dict[str, Any]
@@ -82,7 +82,7 @@ class MCPResponse(BaseModel):
     agent_instructions: Optional[str] = None
 
 
-# --- FastAPI App Initialization ---
+# FastAPI App Initialization
 app = FastAPI(
     title="Pokémon MCP Server - AI Agent Middleware",
     description="Modular Control Platform providing strategic Pokémon data abstractions for AI agents. Combines PokeAPI factual data with AI-powered strategic analysis.",
@@ -91,7 +91,7 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# --- CORS Configuration ---
+#  CORS Configuration 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Configure as needed
@@ -100,18 +100,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- PokeAPI Configuration ---
+# PokeAPI Configuration 
 BASE_URL = "https://pokeapi.co/api/v2/"
 REQUEST_TIMEOUT = 10
 
-# --- Initialize LLM ---
+#Initialize LLM 
 llm = ChatGoogleGenerativeAI(
     model="gemini-1.5-flash",
     google_api_key=os.getenv("GEMINI_API_KEY"),
     temperature=0.7
 )
 
-# --- Prompt Templates ---
+# Prompt Templates
 description_prompt = PromptTemplate(
     input_variables=["name", "types", "abilities", "stats"],
     template="""
@@ -209,14 +209,14 @@ team_analysis_prompt = PromptTemplate(
     """
 )
 
-# --- LLM Chains ---
+# LLM Chains 
 description_chain = LLMChain(llm=llm, prompt=description_prompt)
 battle_chain = LLMChain(llm=llm, prompt=battle_prompt)
 counter_chain = LLMChain(llm=llm, prompt=counter_prompt)
 team_analysis_chain = LLMChain(llm=llm, prompt=team_analysis_prompt)
 
 
-# --- Enhanced Data Abstraction Layer ---
+# Data Abstraction Layer
 class PokemonDataAbstractor:
     """Abstracts and enriches PokeAPI data for AI agents"""
 
@@ -289,7 +289,7 @@ class PokemonDataAbstractor:
             raise HTTPException(status_code=503, detail=f"Network error: {e}")
 
 
-# --- MCP Response Helper ---
+# MCP Response Helper 
 def create_mcp_response(success: bool, data: Any, agent_instructions: str = None) -> MCPResponse:
     """Create standardized MCP response for AI agents"""
     return MCPResponse(
@@ -305,7 +305,7 @@ def create_mcp_response(success: bool, data: Any, agent_instructions: str = None
     )
 
 
-# --- Enhanced MCP Endpoints ---
+#  Endpoints
 
 @app.get("/", summary="MCP Server Information")
 async def mcp_info():
@@ -332,7 +332,7 @@ async def mcp_info():
     )
 
 
-# --- Main Endpoints ---
+#  Main Endpoints 
 
 @app.get("/pokemon/{name}")
 async def get_pokemon_details(name: str):
