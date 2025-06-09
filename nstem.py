@@ -248,7 +248,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-MCP_SERVER_URL = "http://localhost:8000"
+MCP_SERVER_URL = "https://pokemon-mcp-server.onrender.com"
 
 
 def create_loading_animation():
@@ -654,7 +654,7 @@ st.markdown("---")
 st.markdown("""
 <div style="text-align: center; padding: 2rem; background: rgba(255,255,255,0.05); border-radius: 20px; margin: 2rem 0;">
     <p style="color: rgba(255,255,255,0.7); font-family: 'Poppins', sans-serif; font-size: 0.9rem;">
-        Developed with ❤️ for Pokémon enthusiasts. Data from PokéAPI. AI insights by Gemini.
+        Developed by Abuzar Mohammed Makeen.
     </p>
 </div>
 """, unsafe_allow_html=True)
