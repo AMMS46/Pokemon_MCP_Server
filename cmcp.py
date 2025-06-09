@@ -6,8 +6,7 @@ import requests
 import logging
 import os
 from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_google_genai import GoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
 from langchain.chains import LLMChain
 import json
@@ -18,14 +17,14 @@ from datetime import datetime
 load_dotenv()
 os.environ['GEMINI_API_KEY'] = os.getenv("GEMINI_API_KEY")
 
-#  Server-Side Logging
+# --- Server-Side Logging Setup ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 
-#  Pydantic Models for Structured AI Agent Communication
+# Pydantic Models for Structured AI Agent Communication
 class PokemonData(BaseModel):
-
+    """Structured Pokemon data for AI agents"""
     name: str
     id: int
     height: float
@@ -66,7 +65,7 @@ class CounterPokemon(BaseModel):
 
 
 class BattleResult(BaseModel):
-
+    
     winner: str
     confidence: str
     reasoning: str
@@ -82,7 +81,7 @@ class MCPResponse(BaseModel):
     agent_instructions: Optional[str] = None
 
 
-# FastAPI App Initialization
+#  FastAPI App Initialization 
 app = FastAPI(
     title="Pokémon MCP Server - AI Agent Middleware",
     description="Modular Control Platform providing strategic Pokémon data abstractions for AI agents. Combines PokeAPI factual data with AI-powered strategic analysis.",
@@ -91,7 +90,7 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-#  CORS Configuration 
+# CORS Configuration 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Configure as needed
@@ -104,14 +103,14 @@ app.add_middleware(
 BASE_URL = "https://pokeapi.co/api/v2/"
 REQUEST_TIMEOUT = 10
 
-#Initialize LLM 
-llm = ChatGoogleGenerativeAI(
+# --- Initialize LLM ---
+llm = GoogleGenerativeAI(
     model="gemini-1.5-flash",
     google_api_key=os.getenv("GEMINI_API_KEY"),
     temperature=0.7
 )
 
-# Prompt Templates
+# Prompt Templates 
 description_prompt = PromptTemplate(
     input_variables=["name", "types", "abilities", "stats"],
     template="""
@@ -209,14 +208,14 @@ team_analysis_prompt = PromptTemplate(
     """
 )
 
-# LLM Chains 
+# --- LLM Chains ---
 description_chain = LLMChain(llm=llm, prompt=description_prompt)
 battle_chain = LLMChain(llm=llm, prompt=battle_prompt)
 counter_chain = LLMChain(llm=llm, prompt=counter_prompt)
 team_analysis_chain = LLMChain(llm=llm, prompt=team_analysis_prompt)
 
 
-# Data Abstraction Layer
+# Enhanced Data Abstraction Layer 
 class PokemonDataAbstractor:
     """Abstracts and enriches PokeAPI data for AI agents"""
 
@@ -224,10 +223,10 @@ class PokemonDataAbstractor:
     async def fetch_enhanced_pokemon_data(name: str, include_description: bool = True) -> PokemonData:
         """Fetch and enhance Pokemon data with AI-generated description"""
         try:
-            # Get base data from PokeAPI
+            #  base data from PokeAPI
             base_data = await PokemonDataAbstractor._fetch_base_pokemon_data(name)
 
-            # Add AI-generated description if requested
+            # AI-generated description if requested
             if include_description:
                 try:
                     description_response = description_chain.run(
@@ -305,7 +304,7 @@ def create_mcp_response(success: bool, data: Any, agent_instructions: str = None
     )
 
 
-#  Endpoints
+#  Enhanced MCP Endpoints 
 
 @app.get("/", summary="MCP Server Information")
 async def mcp_info():
@@ -332,7 +331,7 @@ async def mcp_info():
     )
 
 
-#  Main Endpoints 
+# Main Endpoints -
 
 @app.get("/pokemon/{name}")
 async def get_pokemon_details(name: str):
