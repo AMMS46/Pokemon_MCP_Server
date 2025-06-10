@@ -472,7 +472,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-MCP_SERVER_URL = "https://pokemon-mcp-server.onrender.com"
+MCP_SERVER_URL = "http://127.0.0.1:8000"
 
 
 def create_loading_animation():
@@ -902,7 +902,7 @@ with tab4:
                     cols = st.columns(2)
                     for i, member in enumerate(team):
                         with cols[i % 2]:
-                            sprite_html = f"<img src='{member['sprite']}' width='120' style='border-radius: 10px; border: 3px solid #FFD700; margin: 0.5rem 0;'>" if member.get(
+                            sprite_html = f"<img src='{member['sprite']}' width='150' style='border-radius: 10px; margin: 0.2rem 0;float: right; clear: both;''>" if member.get(
                                 'sprite') else ""
                             st.markdown(f"""
                             <div class="team-member" style="background: linear-gradient(145deg, #2C3E50, #34495E); border: 3px solid #FFD700; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
@@ -913,9 +913,12 @@ with tab4:
                                     <div style="margin: 0.5rem 0;">
                                         {''.join([f'<span class="type-badge {get_type_class(t)}">{t}</span>' for t in (member.get('types', []) if member.get('types') else [member.get('type', 'Unknown')])])}
                                     </div>
-                                    <div style="color: #FFFFFF; font-family: 'Rajdhani', sans-serif; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); background: rgba(0,0,0,0.3); padding: 0.5rem; border-radius: 8px; margin: 0.5rem 0;">
+                                    <div style="color: #FFFFFF; font-family: 'Rajdhani', sans-serif; font-weight: 400; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); background: rgba(0,0,0,0.3); padding: 0.4rem; border-radius: 8px; margin: 0.5rem 0;">
                                         <strong style="color: #FF6B6B;">🎭 Battle Role:</strong> {member.get('role', 'Elite Team Member')}
                                     </div>
+                                    <div style="color: #FFFFFF; font-family: 'Rajdhani', sans-serif; font-weight: 400; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 8px; margin: 0.5rem 0; font-size: 0.9em; line-height: 1.4;">
+                                    <strong style="color: #4ECDC4;">💡 Selection Reason:</strong><br>
+                    {member.get('reason', 'Selected for team synergy and strategic value.')}
                                     {sprite_html}
                                 </div>
                             </div>
