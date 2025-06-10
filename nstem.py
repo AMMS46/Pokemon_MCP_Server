@@ -472,7 +472,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-MCP_SERVER_URL = "https://pokemon-mcp-server.onrender.com"
+MCP_SERVER_URL = "http://127.0.0.1:8000"
 
 
 def create_loading_animation():
@@ -691,7 +691,7 @@ with tab2:
 
     if compare_button and pokemon1_name and pokemon2_name:
         with st.spinner("🔥 Analyzing battle data..."):
-            # Fixed loading animation
+            #  loading animation
             loading_placeholder = st.empty()
             loading_placeholder.markdown("""
             <div class="loading-pokeball"></div>
@@ -733,7 +733,7 @@ with tab2:
             </p>
             """, unsafe_allow_html=True)
 
-            time.sleep(2)  # Add dramatic pause
+            time.sleep(2)  # pause
             data, error = make_api_request(f"{MCP_SERVER_URL}/battle/{pokemon1_name}/{pokemon2_name}")
 
             loading_placeholder.empty()
@@ -750,7 +750,7 @@ with tab2:
                 </div>
                 """, unsafe_allow_html=True)
 
-                # Battle Analysis - Improved contrast
+                # Battle Analysis 
                 reasoning = battle_result.get('reasoning', 'No analysis available')
                 st.markdown(f"""
                 <div style="background: linear-gradient(145deg, #2C3E50, #34495E); padding: 1.5rem; border-radius: 20px; margin: 1rem 0; border: 3px solid #FFD700; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
@@ -759,7 +759,7 @@ with tab2:
                 </div>
                 """, unsafe_allow_html=True)
 
-                # Key Factors - Improved contrast
+                # Key Factors
                 key_factors = battle_result.get('key_factors', [])
                 if key_factors:
                     st.markdown("#### 🎯 **KEY VICTORY FACTORS:**")
@@ -877,7 +877,7 @@ with tab4:
             </p>
             """, unsafe_allow_html=True)
 
-            time.sleep(2)  # Add anticipation
+            time.sleep(2)  
             data, error = make_api_request(
                 f"{MCP_SERVER_URL}/team/generate",
                 method="POST",
@@ -911,7 +911,7 @@ with tab4:
                                         #{i + 1} {member.get('name', 'Unknown')}
                                     </h4>
                                     <div style="margin: 0.5rem 0;">
-                                        <span class="type-badge {get_type_class(member.get('type', ''))}">{member.get('type', 'Unknown')}</span>
+                                        {''.join([f'<span class="type-badge {get_type_class(t)}">{t}</span>' for t in (member.get('types', []) if member.get('types') else [member.get('type', 'Unknown')])])}
                                     </div>
                                     <div style="color: #FFFFFF; font-family: 'Rajdhani', sans-serif; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); background: rgba(0,0,0,0.3); padding: 0.5rem; border-radius: 8px; margin: 0.5rem 0;">
                                         <strong style="color: #FF6B6B;">🎭 Battle Role:</strong> {member.get('role', 'Elite Team Member')}
@@ -956,9 +956,3 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-hide_menu_style = """
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-header {visibility: hidden;}
-"""
-st.markdown(hide_menu_style, unsafe_allow_html=True)
