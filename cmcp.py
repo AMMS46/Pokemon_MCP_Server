@@ -477,7 +477,6 @@ async def suggest_counters(pokemon_name: str):
         logger.error(f"Counter suggestion failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-
 @app.post("/team/generate")
 async def generate_team(description: str = Query(..., description="Team description")):
     """Generate a Pokemon team based on description with AI analysis"""
@@ -492,11 +491,13 @@ async def generate_team(description: str = Query(..., description="Team descript
             - name: [Exact Pokemon name]
             - type: [Primary type]
             - role: [Role in team like Attacker, Tank, Support, etc.]
+            - Reason: write why this pokemon was choosen based on stats an team synergy with other pokemons in the team in 50-60 words
 
             Format each Pokemon as:
             Name: [Pokemon Name]
             Type: [Type]
             Role: [Role]
+            Reason: [Reason]
 
             Separate each Pokemon with a line break.
             """
@@ -534,6 +535,8 @@ async def generate_team(description: str = Query(..., description="Team descript
                 current_member["type"] = line.split(":", 1)[1].strip()
             elif line.startswith("Role:"):
                 current_member["role"] = line.split(":", 1)[1].strip()
+            elif line.startswith("Reason:"):  # ADD THIS LINE
+                current_member["reason"] = line.split(":", 1)[1].strip()
 
         # Add the last member if exists
         if current_member:
