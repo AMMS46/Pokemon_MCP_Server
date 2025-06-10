@@ -10,6 +10,7 @@ from langchain_google_genai import GoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
 from langchain.chains import LLMChain
 import json
+import requests
 import re
 from datetime import datetime
 
@@ -568,7 +569,7 @@ async def generate_team(description: str = Query(..., description="Team descript
     except Exception as e:
         logger.error(f"Team generation failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-
+    
 
 # --- Health Check ---
 @app.get("/health")
