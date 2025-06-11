@@ -269,6 +269,7 @@ st.markdown("""
         font-family: 'Rajdhani', sans-serif !important;
         font-weight: 600 !important;
         font-size: 1.1rem !important;
+        caret-color: #FFD700 !important;
         box-shadow: 
             inset 0 2px 8px rgba(65, 105, 225, 0.1),
             0 4px 15px rgba(0, 0, 0, 0.1) !important;
@@ -472,7 +473,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-MCP_SERVER_URL = "https://pokemon-mcp-server.onrender.com"
+MCP_SERVER_URL = "http://127.0.0.1:8000"
 
 
 def create_loading_animation():
@@ -775,6 +776,34 @@ with tab2:
                 st.error(f"❌ {error}")
 
 with tab3:
+     # custom CSS for better text input styling and help text
+    
+    st.markdown("""
+    <style>
+    .stTextInput > div > div > input {
+        border: 2px solid #FFD700 !important;
+        border-radius: 10px !important;
+    }
+    .stTextInput > div > div > input::placeholder {
+        color: #888888 !important;
+        opacity: 1 !important;
+    }
+    .stTextInput > div > div > input:focus {
+        border-color: #FFA500 !important;
+        box-shadow: 0 0 5px rgba(255, 215, 0, 0.3) !important;
+    }
+    /* Help text styling */
+    .stTextInput .stTooltipIcon {
+        color: #888888 !important;
+    }
+    [data-testid="stTooltipContent"] {
+        background-color: #333333 !important;
+        color: #ffffff !important;
+        border: 1px solid #FFD700 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
     st.markdown("""
     <div class="feature-card">
         <div class="card-header">🛡️ STRATEGY LAB</div>
@@ -844,7 +873,6 @@ with tab3:
                     st.warning("🤔 No specific counters found in database. Try a different Pokémon!")
             else:
                 st.error(f"❌ {error}")
-
 with tab4:
     st.markdown("""
     <div class="feature-card">
@@ -855,9 +883,36 @@ with tab4:
     </div>
     """, unsafe_allow_html=True)
 
+    st.markdown("""
+    <style>
+    .stTextArea > div > div > textarea {
+        border: 2px solid #FFD700 !important;
+        border-radius: 10px !important;
+        caret-color: #FFD700 !important;
+    }
+    .stTextArea > div > div > textarea::placeholder {
+        color: #888888 !important;
+        opacity: 1 !important;
+    }
+    .stTextArea > div > div > textarea:focus {
+        border-color: #FFA500 !important;
+        box-shadow: 0 0 5px rgba(255, 215, 0, 0.3) !important;
+    }
+    /* Help text styling */
+    .stTextArea .stTooltipIcon {
+        color: #888888 !important;
+    }
+    [data-testid="stTooltipContent"] {
+        background-color: #333333 !important;
+        color: #ffffff !important;
+        border: 1px solid #FFD700 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
     team_description = st.text_area(
         "🎨 **DESCRIBE YOUR ULTIMATE TEAM STRATEGY:**",
-        placeholder="Example: 'A balanced competitive team with devastating offense, one legendary dragon-type, and perfect type coverage for championship tournaments'",
+        placeholder="Example: 'A balanced competitive team with high offense and one starter pokemon'",
         height=120,
         help="Be specific about your battle strategy - the AI will craft a team based on your vision!"
     )
@@ -902,25 +957,41 @@ with tab4:
                     cols = st.columns(2)
                     for i, member in enumerate(team):
                         with cols[i % 2]:
-                            sprite_html = f"<img src='{member['sprite']}' width='150' style='border-radius: 10px; margin: 0.2rem 0;float: right; clear: both;''>" if member.get(
-                                'sprite') else ""
+                            # Use the exact same logic as tab3
+                            sprite_html = f"<img src='{member['sprite']}' width='150' style='border-radius: 10px; margin: 0.2rem 0; float: right; clear: both; border: 3px solid #FFD700; box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);'>" if member.get('sprite') else ""
+                            
+                            # Handle types - split if they contain slash or are in list format
+                            pokemon_types = member.get('type', 'Unknown')
+                            if isinstance(pokemon_types, str):
+                                # Split by slash if present, otherwise keep as single type
+                                type_list = pokemon_types.split('/') if '/' in pokemon_types else [pokemon_types]
+                            elif isinstance(pokemon_types, list):
+                                type_list = pokemon_types
+                            else:
+                                type_list = ['Unknown']
+                            
+                            # Create type badges for each type
+                            type_badges = ' '.join([f'<span class="type-badge {get_type_class(ptype.strip())}">{ptype.strip()}</span>' for ptype in type_list])
+                            
+                            details_html = f"""
+                            <div style='flex-grow: 1;'>
+                                <h4 style="color: #FFD700; margin-bottom: 0.5rem; font-family: 'Orbitron', monospace; font-weight: 700;">
+                                    #{i + 1} {member.get('name', 'Unknown')}
+                                    {type_badges}
+                                </h4>
+                                <div style="color: #FFFFFF; line-height: 1.5; font-family: 'Rajdhani', sans-serif; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); background: rgba(0,0,0,0.3); padding: 0.5rem; border-radius: 8px;">
+                                    <strong style="color: #FF6B6B;">🎭 Battle Role:</strong> {member.get('role', 'Elite Team Member')}
+                                </div>
+                                <div style="color: #FFFFFF; line-height: 1.5; font-family: 'Rajdhani', sans-serif; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 8px; margin-top: 0.5rem;">
+                                    <strong style="color: #4ECDC4;">💡 Selection Reason:</strong> {member.get('reason', 'Selected for team synergy and strategic value.')}
+                                </div>
+                            </div>
+                            """
+                            
                             st.markdown(f"""
                             <div class="team-member" style="background: linear-gradient(145deg, #2C3E50, #34495E); border: 3px solid #FFD700; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                                <div>
-                                    <h4 style="color: #FFD700; margin-bottom: 0.5rem; font-family: 'Orbitron', monospace; font-weight: 700;">
-                                        #{i + 1} {member.get('name', 'Unknown')}
-                                    </h4>
-                                    <div style="margin: 0.5rem 0;">
-                                        {''.join([f'<span class="type-badge {get_type_class(t)}">{t}</span>' for t in (member.get('types', []) if member.get('types') else [member.get('type', 'Unknown')])])}
-                                    </div>
-                                    <div style="color: #FFFFFF; font-family: 'Rajdhani', sans-serif; font-weight: 400; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); background: rgba(0,0,0,0.3); padding: 0.4rem; border-radius: 8px; margin: 0.5rem 0;">
-                                        <strong style="color: #FF6B6B;">🎭 Battle Role:</strong> {member.get('role', 'Elite Team Member')}
-                                    </div>
-                                    <div style="color: #FFFFFF; font-family: 'Rajdhani', sans-serif; font-weight: 400; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 8px; margin: 0.5rem 0; font-size: 0.9em; line-height: 1.4;">
-                                    <strong style="color: #4ECDC4;">💡 Selection Reason:</strong><br>
-                    {member.get('reason', 'Selected for team synergy and strategic value.')}
-                                    {sprite_html}
-                                </div>
+                                {sprite_html}
+                                {details_html}
                             </div>
                             """, unsafe_allow_html=True)
 
