@@ -368,7 +368,7 @@ async def head_to_head_battle(pokemon1_name: str, pokemon2_name: str):
         pok2_data = await PokemonDataAbstractor._fetch_base_pokemon_data(pokemon2_name)
 
         # Generate battle analysis
-        battle_response = battle_chain.run(
+        battle_response = battle_chain.invoke(
             pokemon1_name=pok1_data.name,
             pokemon1_types=", ".join(pok1_data.types),
             pokemon1_stats=pok1_data.stats,
@@ -425,7 +425,7 @@ async def suggest_counters(pokemon_name: str):
         target_data = await PokemonDataAbstractor._fetch_base_pokemon_data(pokemon_name)
 
         # Generate counter suggestions
-        counter_response = counter_chain.run(
+        counter_response = counter_chain.invoke(
             target_pokemon=target_data.name,
             target_types=", ".join(target_data.types),
             target_stats=target_data.stats
@@ -504,7 +504,7 @@ async def generate_team(description: str = Query(..., description="Team descript
         )
 
         team_chain = LLMChain(llm=llm, prompt=team_prompt_template)
-        team_response = team_chain.run(description=description)
+        team_response = team_chain.invoke(description=description)
 
         # Parse team response
         team = []
