@@ -230,7 +230,7 @@ class PokemonDataAbstractor:
             # AI-generated description if requested
             if include_description:
                 try:
-                    description_response = description_chain.run(
+                    description_response = description_chain.invoke(
                         name=base_data.name,
                         types=", ".join(base_data.types),
                         abilities=", ".join(base_data.abilities),
